@@ -1,0 +1,74 @@
+{
+    "questions": [
+        {
+            "question": "这是什么动物？",
+            "image": "panda.png",
+            "options": ["熊猫", "猫", "猴子", "狗"],
+            "correct": "熊猫",
+            "encouragement": "真棒！"
+        },
+        {
+            "question": "这是什么动物？",
+            "image": "rabbit.png",
+            "options": ["龙", "鸡", "老虎", "兔子"],
+            "correct": "兔子",
+            "encouragement": "做得好！"
+        },
+        {
+            "question": "这是什么东西？",
+            "image": "computer.png",
+            "options": ["手机", "电脑", "鞋子", "背包"],
+            "correct": "电脑",
+            "encouragement": "太厉害了！"
+        },
+        {
+            "question": "这是什么东西？",
+            "image": "tv.png",
+            "options": ["桌子", "椅子", "电视", "扫把"],
+            "correct": "电视",
+            "encouragement": "你真聪明！"
+        },
+        {
+            "question": "这是什么东西？",
+            "image": "eraser.png",
+            "options": ["手表", "橡皮", "书包", "尺子"],
+            "correct": "橡皮",
+            "encouragement": "好极了！"
+        },
+        {
+            "question": "小美现在在哪里？",
+            "image": "kitchen.png",
+            "options": ["厨房", "卧室", "客厅", "洗手间"],
+            "correct": "厨房",
+            "encouragement": "答对了！"
+        },
+        {
+            "question": "小华觉得不舒服，他应该去哪？",
+            "image": "hospital.png",
+            "options": ["银行", "医院", "公园", "动物园"],
+            "correct": "医院",
+            "encouragement": "非常好！"
+        },
+        {
+            "question": "这是什么水果？",
+            "image": "apple.png",
+            "options": ["香蕉", "橙子", "榴莲", "苹果"],
+            "correct": "苹果",
+            "encouragement": "很优秀！"
+        },
+        {
+            "question": "妈妈在做什么？",
+            "image": "phone.png",
+            "options": ["打电话", "扫地", "洗衣服", "上课"],
+            "correct": "打电话",
+            "encouragement": "表现得很好！"
+        },
+        {
+            "question": "他做什么工作？",
+            "image": "police.png",
+            "options": ["警察", "护士", "医生", "老师"],
+            "correct": "警察",
+            "encouragement": "太棒了！"
+        }
+    ]
+}

@@ -351,4 +351,5 @@ class ChineseGame:
 
 if __name__ == "__main__":
     game = ChineseGame()
+    print(len(game.questions))
     game.run()
