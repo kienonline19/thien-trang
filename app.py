@@ -5,6 +5,7 @@ import os
 from PIL import Image, ImageTk
 import random
 import json
+import time
 
 
 class ChineseGame:
@@ -17,6 +18,13 @@ class ChineseGame:
         self.score = 0
         self.current_question = 0
         self.wrong_attempts = 0
+
+        # Define rewards as class attribute
+        self.rewards = [
+            ("flower.png", "🌹 玫瑰花"),
+            ("teddy.png", "🧸 玩具熊"),
+            ("watch.png", "⌚ 手表")
+        ]
 
         pygame.mixer.init()
         self.load_sounds()
@@ -56,11 +64,9 @@ class ChineseGame:
     def show_welcome_screen(self):
         self.clear_screen()
 
-        # Main frame with gradient background
         main_frame = tk.Frame(self.root, bg='#E8F4FF')
         main_frame.place(relx=0.5, rely=0.5, anchor='center')
 
-        # Title with shadow effect
         title = tk.Label(
             main_frame,
             text="欢迎来到中文学习游戏",
@@ -71,11 +77,9 @@ class ChineseGame:
         )
         title.pack(pady=30)
 
-        # Form frame
         form_frame = tk.Frame(main_frame, bg='#E8F4FF', padx=30)
         form_frame.pack(pady=20)
 
-        # Custom style for entry fields
         entry_style = {
             'width': 25,
             'font': ('Arial', 14),
@@ -85,7 +89,7 @@ class ChineseGame:
             'bd': 0,
         }
 
-        # Name input with better styling
+        # Name input
         name_frame = tk.Frame(form_frame, bg='#E8F4FF', pady=10)
         name_frame.pack(fill='x')
 
@@ -109,7 +113,7 @@ class ChineseGame:
         self.name_entry = tk.Entry(name_entry_frame, **entry_style)
         self.name_entry.pack(pady=8, padx=10, fill='x')
 
-        # Age input with similar styling
+        # Age input
         age_frame = tk.Frame(form_frame, bg='#E8F4FF', pady=10)
         age_frame.pack(fill='x')
 
@@ -133,7 +137,7 @@ class ChineseGame:
         self.age_entry = tk.Entry(age_entry_frame, **entry_style)
         self.age_entry.pack(pady=8, padx=10, fill='x')
 
-        # Custom start button
+        # Start button
         button_frame = tk.Frame(main_frame, bg='#E8F4FF')
         button_frame.pack(pady=30)
 
@@ -152,7 +156,6 @@ class ChineseGame:
         )
         start_button.pack()
 
-        # Bind hover effects
         def on_enter(e):
             start_button['background'] = '#2980B9'
 
@@ -162,7 +165,6 @@ class ChineseGame:
         start_button.bind('<Enter>', on_enter)
         start_button.bind('<Leave>', on_leave)
 
-        # Add focus events for entry fields
         def on_entry_focus_in(event, frame):
             frame.configure(highlightbackground='#3498DB')
 
@@ -198,7 +200,6 @@ class ChineseGame:
         main_frame = tk.Frame(self.root, bg='#E8F4FF')
         main_frame.pack(expand=True, fill='both', padx=30, pady=30)
 
-        # Score and attempts with better styling
         score_frame = tk.Frame(main_frame, bg='#E8F4FF')
         score_frame.pack(fill='x')
 
@@ -218,7 +219,6 @@ class ChineseGame:
             bg='#E8F4FF'
         ).pack(side='right')
 
-        # Question text
         tk.Label(
             main_frame,
             text=question['question'],
@@ -227,14 +227,12 @@ class ChineseGame:
             bg='#E8F4FF'
         ).pack(pady=20)
 
-        # Image
         image_photo = self.load_image(question["image"])
         if image_photo:
             image_label = tk.Label(main_frame, image=image_photo, bg='#E8F4FF')
             image_label.image = image_photo
             image_label.pack(pady=20)
 
-        # Options with better styling
         options_frame = tk.Frame(main_frame, bg='#E8F4FF')
         options_frame.pack(pady=20)
 
@@ -260,7 +258,6 @@ class ChineseGame:
             )
             button.grid(row=row, column=col, padx=10, pady=5)
 
-            # Add hover effect
             button.bind('<Enter>', lambda e,
                         btn=button: btn.configure(bg='#2980B9'))
             button.bind('<Leave>', lambda e,
@@ -309,14 +306,29 @@ class ChineseGame:
             bg='#E8F4FF'
         ).pack(pady=20)
 
+        # Random reward button
+        random_button = tk.Button(
+            main_frame,
+            text="🎲 随机选择",
+            command=self.random_reward,
+            font=('Arial', 16),
+            width=20,
+            fg='white',
+            bg='#E74C3C',
+            activebackground='#C0392B',
+            relief='flat',
+            cursor='hand2'
+        )
+        random_button.pack(pady=10)
+
+        # Add hover effect for random button
+        random_button.bind(
+            '<Enter>', lambda e: random_button.configure(bg='#C0392B'))
+        random_button.bind(
+            '<Leave>', lambda e: random_button.configure(bg='#E74C3C'))
+
         rewards_frame = tk.Frame(main_frame, bg='#E8F4FF')
         rewards_frame.pack(pady=20)
-
-        rewards = [
-            ("flower.png", "🌹 玫瑰花"),
-            ("teddy.png", "🧸 玩具熊"),
-            ("watch.png", "⌚ 手表")
-        ]
 
         button_style = {
             'font': ('Arial', 14),
@@ -328,7 +340,7 @@ class ChineseGame:
             'cursor': 'hand2'
         }
 
-        for i, (img, chinese) in enumerate(rewards):
+        for i, (img, chinese) in enumerate(self.rewards):
             reward_frame = tk.Frame(rewards_frame, bg='#E8F4FF')
             reward_frame.grid(row=0, column=i, padx=20)
 
@@ -348,11 +360,39 @@ class ChineseGame:
             )
             button.pack(pady=5)
 
-            # Add hover effect
             button.bind('<Enter>', lambda e,
                         btn=button: btn.configure(bg='#2980B9'))
             button.bind('<Leave>', lambda e,
                         btn=button: btn.configure(bg='#3498DB'))
+
+    def random_reward(self):
+        # Show loading animation
+        temp_frame = tk.Frame(self.root, bg='#E8F4FF')
+        temp_frame.place(relx=0.5, rely=0.5, anchor='center')
+
+        loading_label = tk.Label(
+            temp_frame,
+            text="🎲 正在选择...",
+            font=('Arial', 24, 'bold'),
+            fg='#2E4053',
+            bg='#E8F4FF'
+        )
+        loading_label.pack()
+
+        # Update GUI
+        self.root.update()
+
+        # Wait for animation
+        time.sleep(1)
+
+        # Choose random reward
+        img, chinese = random.choice(self.rewards)
+
+        # Remove loading animation
+        temp_frame.destroy()
+
+        # Show selected reward
+        self.select_reward(chinese, img)
 
     def select_reward(self, chinese, image_name):
         self.clear_screen()
@@ -395,7 +435,6 @@ class ChineseGame:
         )
         button.pack(pady=20)
 
-        # Add hover effect
         button.bind('<Enter>', lambda e: button.configure(bg='#2980B9'))
         button.bind('<Leave>', lambda e: button.configure(bg='#3498DB'))
 
@@ -428,7 +467,6 @@ class ChineseGame:
         )
         button.pack(pady=20)
 
-        # Add hover effect
         button.bind('<Enter>', lambda e: button.configure(bg='#2980B9'))
         button.bind('<Leave>', lambda e: button.configure(bg='#3498DB'))
 
