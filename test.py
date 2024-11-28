@@ -40,77 +40,15 @@ class ChineseGame:
             bg_image = bg_image.resize((1024, 768), Image.Resampling.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(bg_image)
 
-            # Create canvas for background
-            self.bg_canvas = tk.Canvas(
-                self.root, width=1024, height=768, highlightthickness=0)
-            self.bg_canvas.place(x=0, y=0, relwidth=1, relheight=1)
-
-            # Set background image
-            self.bg_canvas.create_image(0, 0, image=self.bg_photo, anchor='nw')
-
-            # Add decorative stars with lighter color
-            for i in range(10):
-                x = random.randint(50, 974)
-                y = random.randint(50, 718)
-                # Using a lighter yellow color
-                self.draw_star(x, y, 5, "#FFE970")
+            # Create label for background
+            self.bg_label = tk.Label(self.root, image=self.bg_photo)
+            self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         except Exception as e:
             print(f"Error loading background: {e}")
             # Fallback to solid color background
-            self.bg_canvas.create_rectangle(
-                0, 0, 1024, 768, fill="#E8F4FF", outline="")
-
-    def draw_star(self, x, y, size, color):
-        points = []
-        for i in range(5):
-            # Outer points
-            points.append(x + size * math.cos(math.pi/2 + 2*math.pi*i/5))
-            points.append(y - size * math.sin(math.pi/2 + 2*math.pi*i/5))
-            # Inner points
-            points.append(x + size/2 * math.cos(math.pi /
-                          2 + 2*math.pi*i/5 + math.pi/5))
-            points.append(y - size/2 * math.sin(math.pi /
-                          2 + 2*math.pi*i/5 + math.pi/5))
-
-        self.bg_canvas.create_polygon(
-            points, fill=color, outline="", stipple='gray75')
-
-    def draw_clouds(self):
-        cloud_coords = [
-            (50, 50),
-            (900, 100),
-            (150, 650),
-            (850, 600)
-        ]
-
-        for x, y in cloud_coords:
-            self.bg_canvas.create_oval(x, y, x+60, y+30,
-                                       fill="#FFFFFF", outline="",
-                                       stipple='gray50')
-            self.bg_canvas.create_oval(x+30, y-10, x+90, y+20,
-                                       fill="#FFFFFF", outline="",
-                                       stipple='gray50')
-            self.bg_canvas.create_oval(x+20, y+10, x+80, y+40,
-                                       fill="#FFFFFF", outline="",
-                                       stipple='gray50')
-
-    def draw_bamboo(self):
-        x = 950
-        for i in range(3):
-            # Bamboo stem
-            self.bg_canvas.create_line(x+i*20, 500, x+i*20, 700,
-                                       fill="#90EE90", width=8,
-                                       stipple='gray50')
-            # Bamboo leaves
-            self.bg_canvas.create_arc(x+i*20-20, 520+i*30, x+i*20+20, 560+i*30,
-                                      start=0, extent=180,
-                                      fill="#90EE90", outline="",
-                                      stipple='gray50')
-
-    def hex_to_rgb(self, hex_color):
-        hex_color = hex_color.lstrip('#')
-        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            self.bg_label = tk.Label(self.root, bg="#E8F4FF")
+            self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def load_questions(self):
         try:
@@ -170,7 +108,7 @@ class ChineseGame:
             'bd': 0,
         }
 
-        # Name input with better styling
+        # Name input
         name_frame = tk.Frame(form_frame, bg='#E8F4FF')
         name_frame.pack(fill='x')
 
@@ -194,7 +132,7 @@ class ChineseGame:
         self.name_entry = tk.Entry(name_entry_frame, **entry_style)
         self.name_entry.pack(pady=8, padx=10, fill='x')
 
-        # Age input with better styling
+        # Age input
         age_frame = tk.Frame(form_frame, bg='#E8F4FF')
         age_frame.pack(fill='x')
 
@@ -218,7 +156,7 @@ class ChineseGame:
         self.age_entry = tk.Entry(age_entry_frame, **entry_style)
         self.age_entry.pack(pady=8, padx=10, fill='x')
 
-        # Start button with hover effect
+        # Start button
         button_frame = tk.Frame(main_frame, bg='#E8F4FF')
         button_frame.pack(pady=30)
 
@@ -405,6 +343,7 @@ class ChineseGame:
             cursor='hand2'
         )
         random_button.pack(pady=10)
+
         random_button.bind(
             '<Enter>', lambda e: random_button.configure(bg='#C0392B'))
         random_button.bind(
@@ -562,7 +501,7 @@ class ChineseGame:
 
     def clear_screen(self):
         for widget in self.root.winfo_children():
-            if widget != self.bg_canvas:  # Keep the background
+            if widget != self.bg_label:  # Keep the background
                 widget.destroy()
 
     def run(self):
